@@ -117,30 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAABFdJREFUaEPFWr9LW1EUdujg0KFDhw4d+gd07NDRsUNHB4cOGTsULBp/oWKwIiKi
-        SJAgXQQdRAUREZHgIBkqKipWBBEpEiSDoqKiSJDX73seNXk5Sd6P+8wHHzG55577nfvuj3Pvs8oUmpub
-        P7e0tLSCQ+A0vqfAfyS+/wFnwTjYAdZ0dXW9kqqVAQRUR6PRL62trb8hKA1aHnmC4MbBWvh6LW7DB3sO
-        jUfATI6YoDxHID/ZKdJMOGhqavqKxv46GjdGBHGAz2/SnDnwEcMxx7DasGkikBSG5ztpPhjg7D2chtbr
-        JZjGE/8kMvwB4rmymBzrnoj2r8A6keMNFE8HmuMKMCKy3AHCOWwq1vNOQs8tO1TklYZM2EqM+XLMsGNF
-        ZnHA8MVWGx9c5z4kUgsh67xW0Td7enqsw8NDK51OWxMTE6qNF0Ljd5GbD9lhjQ+dvb09KxcMJh6Pq7Yu
-        meEwF9nPQAHTA62Cb7a1tVlra2vW/f29yH/GxsaG/XS0ei4YE9kPQETV+DG0VWd4eNjueSey2aw1MzOj
-        1ilFLu95OzWzSs3QNDkHTk9PRf4DGERnZ6dqX4p5c0FSYtXQD9vb263V1VWrr69PLVtcXLRubm7sAM7O
-        zgps3BBPISny7fHvJ58vyuXlZVsce5d/az3M8c/5MTc3V1Dmhtzc7MnMHU4z8Ev2OoXn4vLy0pqamlLt
-        gxDa69j7PAaqBn64vb0tsgvBvSCRSKj1fDLBAHiG1Qo9k+LcgEF2d3erPjxylgFMO370Ra75x8fHIrE0
-        Li4u7Mms+fHIdc6BlFLgmVzP3WJyclL14YNpBsBrD63QNWOxmHV9fS3ySuPo6Ej14ZdGltCVlRWRVx4j
-        IyOqD79kALx0UgvdcGBgQM11NGxubqo+AjDDAALl/zs7O/akLAfuDb29vaqPANxiALzu0wo9kSlBKSST
-        SbVeQM4zAN5VaoWeODY2ZovU5gN3YkPLZh6ZwzGAGmeBW46Ojqq/U3AuwkgjhJHHk9iJo8AVid3dXTvf
-        z/2diRpPXQsLC3b6kFtmilj+sw0NDW/tbBRfxjWjcswFT1j9/f155dydAx4fi5IbsC2ewJdazagcnROX
-        y2kqlQpyVHRNaI6K/Ke7oHOnUTkWW3nu7u5MpgsF5PDB5weR/wBG5DQsRy2A/f19e0XS7A1ySGQ/gwd7
-        BOEpL3oMgJsUT1eDg4OqnWGeP01eJ1Do6WqFidnS0pKp3N4tO0SuDjwFI+l1GIS2A44UkaqD9y0wNnrI
-        N0GIv2psbPwoMkuDb0ZYQXNUKUJPrchzB1So0xxVgtDyS2R5AypHUPnW6fAl6Vv8I+CgIu/J0C7fj3kb
-        NsUAR3zltO5sJCyivQPXE9YtmLXC8Q80EObTYDrTUXapDIL6+vo3aCSGYIzNDfhibjNUdIcNA9wveMWN
-        xpN+gqFokP/RwhwsPzF7aTCbhRAuuwmQlwScL7mbIYfdFjgvV/kRM71dVfUfjvlKAG/z9PcAAAAASUVO
-        RK5CYII=
-</value>
-  </data>
 </root>

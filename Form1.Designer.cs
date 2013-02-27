@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.canvas = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pencilTool = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pencilTool)).BeginInit();
             this.SuspendLayout();
             // 
             // canvas
@@ -46,28 +46,28 @@
             this.canvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseMove);
             this.canvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseUP);
             // 
-            // button1
+            // pencilTool
             // 
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(76, 71);
-            this.button1.TabIndex = 2;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.pencilTool.Image = global::Sketcher.Properties.Resources.btn_pencil_normal;
+            this.pencilTool.Location = new System.Drawing.Point(12, 12);
+            this.pencilTool.Name = "pencilTool";
+            this.pencilTool.Size = new System.Drawing.Size(50, 50);
+            this.pencilTool.TabIndex = 2;
+            this.pencilTool.TabStop = false;
+            this.pencilTool.Click += new System.EventHandler(this.pencilTool_Click_1);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1194, 632);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.pencilTool);
             this.Controls.Add(this.canvas);
             this.Name = "Form1";
             this.Text = "Sketcher - Untitled";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pencilTool)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -75,7 +75,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox canvas;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pencilTool;
 
     }
 }

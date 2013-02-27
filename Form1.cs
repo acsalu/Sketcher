@@ -7,22 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Resources;
+using System.Reflection;
+using System.Threading;
+using System.Globalization;
 
 namespace Sketcher
 {
+    public enum Tools { PENCIL, ERASER, RECTANGLE, CIRCLE }
+
     public partial class Form1 : Form
     {
         private Graphics g;
         private Point startPoint;
+        private ResourceManager rm;
+        private Tools currentTool;
+
 
         public Form1()
         {
             InitializeComponent();
+            rm = new ResourceManager("rmc", Assembly.GetExecutingAssembly());
+            currentTool = Tools.PENCIL;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void canvas_MouseDown(object sender, MouseEventArgs e)
@@ -57,9 +68,9 @@ namespace Sketcher
             g = null;
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void pencilTool_Click_1(object sender, EventArgs e)
         {
-
+            pencilTool.Image = (Image)Properties.Resources.ResourceManager.GetObject("btn_pencil_selected");
         }
 
     }
