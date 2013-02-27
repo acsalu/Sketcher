@@ -21,6 +21,7 @@ namespace Sketcher
         private String[] toolNames;
         private PictureBox[] toolIcons;
         private bool isDrawing;
+        private bool shouldFormailzed;
 
         private Rectangle oldRect;
 
@@ -32,6 +33,7 @@ namespace Sketcher
             toolNames = new String[] { "Pencil Tool", "Rectangle Tool", "Ellipse Tool" };
             oldRect = new Rectangle(0, 0, 0, 0);
             isDrawing = false;
+            shouldFormailzed = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -42,17 +44,39 @@ namespace Sketcher
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (isDrawing && e.KeyChar == (char)27)
+            if (isDrawing)
             {
-                Console.Out.WriteLine("Cancel current drawing.");
-                isDrawing = false;
+                if (e.KeyChar == (char) 27) 
+                {
+                    statusStrip.Items[0].Text = "Cancel current drawing.";
+                    isDrawing = false;
+                }
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            Console.Out.WriteLine(e.KeyCode);
+            if (e.KeyCode == Keys.Shift)
+            {
+                statusStrip.Items[0].Text = "Formalize the shape.";
+                shouldFormailzed = true;
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Shift)
+            {
+                statusStrip.Items[0].Text = "";
+                shouldFormailzed = false;
             }
         }
 
         private void canvas_MouseDown(object sender, MouseEventArgs e)
         {
-            Console.Out.WriteLine("MouseDown on canvas");
-            Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
+            //Console.Out.WriteLine("MouseDown on canvas");
+            //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             
             Pen drawPen = new Pen(Color.Black, 1);
             g = canvas.CreateGraphics();
@@ -61,7 +85,7 @@ namespace Sketcher
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e) {
-            Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
+            //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             
             if (g != null)
             {
@@ -82,10 +106,10 @@ namespace Sketcher
                                 if (currentTool == Tool.RECTANGLE) g.DrawRectangle(new Pen(canvas.BackColor), oldRect);
                                 else g.DrawEllipse(new Pen(canvas.BackColor), oldRect.X, oldRect.Y, oldRect.Width, oldRect.Height);
                             }
-                            int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
-                            int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
                             int rectWidth = Math.Abs(startPoint.X - tempPoint.X);
                             int rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
+                            int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
+                            int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
                             Rectangle rect = new Rectangle(rectX, rectY, rectWidth, rectHeight);
 
                             if (currentTool == Tool.RECTANGLE) g.DrawRectangle(drawPen, rect);
@@ -99,8 +123,8 @@ namespace Sketcher
         }
 
         private void canvas_MouseUP(object sender, MouseEventArgs e) {
-            Console.Out.WriteLine("MouseDown off canvas");
-            Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
+            //Console.Out.WriteLine("MouseDown off canvas");
+            //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             isDrawing = false;
             g.Dispose();
             g = null;
@@ -111,10 +135,10 @@ namespace Sketcher
                     break;
                 case Tool.RECTANGLE:
                     oldRect = new Rectangle(0, 0, 0, 0);
-                    statusStrip.Items[0].Text = "Drew a rectangle...";
+                    statusStrip.Items[0].Text = "A rectangle is drawn.";
                     break;
                 case Tool.ELLIPSE:
-                    statusStrip.Items[0].Text = "Drew a ellipse...";
+                    statusStrip.Items[0].Text = "An ellipse is drawn.";
                     oldRect = new Rectangle(0, 0, 0, 0);
                     break;
             }
@@ -146,10 +170,20 @@ namespace Sketcher
             toolIcons[(int) t].Image
                 = (Image) Properties.Resources.ResourceManager.GetObject(toolImageNames[(int) t] + "_selected");
             currentTool = t;
-            statusStrip.Items[0].Text = "Change to " + toolNames[(int) currentTool];
+            statusStrip.Items[0].Text = "Change to " + toolNames[(int) currentTool] + ".";
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
