@@ -63,6 +63,26 @@ namespace Sketcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btn_ellipse_normal {
+            get {
+                object obj = ResourceManager.GetObject("btn_ellipse_normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn_ellipse_selected {
+            get {
+                object obj = ResourceManager.GetObject("btn_ellipse_selected", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap btn_pencil_normal {
             get {
                 object obj = ResourceManager.GetObject("btn_pencil_normal", resourceCulture);
@@ -76,6 +96,26 @@ namespace Sketcher.Properties {
         internal static System.Drawing.Bitmap btn_pencil_selected {
             get {
                 object obj = ResourceManager.GetObject("btn_pencil_selected", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn_rectangle_normal {
+            get {
+                object obj = ResourceManager.GetObject("btn_rectangle_normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn_rectangle_selected {
+            get {
+                object obj = ResourceManager.GetObject("btn_rectangle_selected", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
