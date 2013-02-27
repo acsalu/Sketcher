@@ -188,6 +188,11 @@ namespace Sketcher
 
         }
 
+        private void eDITToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         
 
     }
