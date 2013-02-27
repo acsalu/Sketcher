@@ -32,14 +32,26 @@ namespace Sketcher
             toolImageNames = new String[] { "btn_pencil", "btn_rectangle", "btn_ellipse" };
             toolNames = new String[] { "Pencil Tool", "Rectangle Tool", "Ellipse Tool" };
             oldRect = new Rectangle(0, 0, 0, 0);
+
             isDrawing = false;
             shouldFormailzed = false;
+        }
+
+        private void setToolTips()
+        {
+            for (int i = 0; i < toolIcons.Length; ++i)
+            {
+                ToolTip tt = new ToolTip();
+                tt.SetToolTip(toolIcons[i], toolNames[i]);
+                tt.AutoPopDelay = 2000;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             toolIcons = new PictureBox[] { pencilTool, rectangleTool, ellipseTool};
             this.pencilTool_Click_1(null, null);
+            setToolTips();
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -191,6 +203,11 @@ namespace Sketcher
         private void eDITToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
         }
 
         
