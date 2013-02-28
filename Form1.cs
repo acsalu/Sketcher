@@ -24,6 +24,7 @@ namespace Sketcher
         private String[] toolNames;
         private PictureBox[] toolIcons;
         private bool isDrawing;
+        private bool hasBeenModified;
         private bool shouldFormailzed;
         private String currentPath = "";
         private static Point nullPoint = new Point(-100000, -100000);
@@ -42,7 +43,7 @@ namespace Sketcher
 
             isDrawing = false;
             shouldFormailzed = false;
-            canvasCursor = Cursor.Current;
+            canvasCursor = this.Cursor;
         }
 
         private void setToolTips()
@@ -179,19 +180,19 @@ namespace Sketcher
         private void pencilTool_Click_1(object sender, EventArgs e)
         {
             changeTool(Tool.PENCIL);
-            this.Cursor = Cursors.Default;
+            canvasCursor = Cursors.Default;
         }
 
         private void rectangleTool_Click_1(object sender, EventArgs e)
         {
             changeTool(Tool.RECTANGLE);
-            this.Cursor = Cursors.Cross;
+            canvasCursor = Cursors.Cross;
         }
 
         private void ellipseTool_Click_1(object sender, EventArgs e)
         {
             changeTool(Tool.ELLIPSE);
-            this.Cursor = Cursors.Cross;
+            canvasCursor = Cursors.Cross;
         }
 
         private void changeTool(Tool t)
@@ -313,12 +314,14 @@ namespace Sketcher
         private void canvas_MouseEnter(object sender, EventArgs e)
         {
             Console.Out.WriteLine("Mouse entered canvas");
-            Cursor.Current = canvasCursor;
+            this.Cursor = canvasCursor;
         }
 
         private void canvas_MouseLeave(object sender, EventArgs e)
         {
-
+            Console.Out.WriteLine("Mouse left canvas");
+            canvasCursor = this.Cursor;
+            this.Cursor = Cursors.Default;
         }
     }
 }
