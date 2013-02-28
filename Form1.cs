@@ -13,11 +13,7 @@ using System.IO;
 namespace Sketcher
 {
     public enum Tool { PENCIL = 0, RECTANGLE, ELLIPSE }
-    static class Constants
-    {
-        public const int DEFAULT_CANVAS_WIDTH = 800;
-        public const int DEFAULT_CANVAS_HEIGHT = 600;
-    }
+   
 
     public partial class Form1 : Form
     {
@@ -31,6 +27,7 @@ namespace Sketcher
         private bool shouldFormailzed;
         private String currentPath = "";
         private static Point nullPoint = new Point(-100000, -100000);
+        private Cursor canvasCursor;
 
         private Rectangle oldRect;
 
@@ -45,6 +42,7 @@ namespace Sketcher
 
             isDrawing = false;
             shouldFormailzed = false;
+            canvasCursor = Cursor.Current;
         }
 
         private void setToolTips()
@@ -130,11 +128,17 @@ namespace Sketcher
                                 if (currentTool == Tool.RECTANGLE) g.DrawRectangle(new Pen(canvas.BackColor), oldRect);
                                 else g.DrawEllipse(new Pen(canvas.BackColor), oldRect.X, oldRect.Y, oldRect.Width, oldRect.Height);
                             }
+
+                            Rectangle rect = Rectangle.Empty;
+                            
                             int rectWidth = Math.Abs(startPoint.X - tempPoint.X);
                             int rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
                             int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
                             int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
-                            Rectangle rect = new Rectangle(rectX, rectY, rectWidth, rectHeight);
+
+                            rect = (shouldFormailzed) ? 
+                                new Rectangle(Math.Min(rectWidth, rectHeight), Math.Min(rectWidth, rectHeight), startPoint.X, startPoint.Y) :
+                                new Rectangle(rectX, rectY, rectWidth, rectHeight);
 
                             if (currentTool == Tool.RECTANGLE) g.DrawRectangle(drawPen, rect);
                             else g.DrawEllipse(drawPen, rect.X, rect.Y, rect.Width, rect.Height);
@@ -170,6 +174,7 @@ namespace Sketcher
                     break;
             }
         }
+
 
         private void pencilTool_Click_1(object sender, EventArgs e)
         {
@@ -299,5 +304,21 @@ namespace Sketcher
             canvas.Image = bmp;
         }
 
+        static class Constants
+        {
+            public const int DEFAULT_CANVAS_WIDTH = 800;
+            public const int DEFAULT_CANVAS_HEIGHT = 600;
+        }
+
+        private void canvas_MouseEnter(object sender, EventArgs e)
+        {
+            Console.Out.WriteLine("Mouse entered canvas");
+            Cursor.Current = canvasCursor;
+        }
+
+        private void canvas_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
     }
 }
