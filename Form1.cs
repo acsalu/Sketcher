@@ -9,9 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
+
 namespace Sketcher
 {
     public enum Tool { PENCIL = 0, RECTANGLE, ELLIPSE }
+    static class Constants
+    {
+        public const int DEFAULT_CANVAS_WIDTH = 800;
+        public const int DEFAULT_CANVAS_HEIGHT = 600;
+    }
 
     public partial class Form1 : Form
     {
@@ -23,6 +29,8 @@ namespace Sketcher
         private PictureBox[] toolIcons;
         private bool isDrawing;
         private bool shouldFormailzed;
+        private String currentPath = "";
+        private static Point nullPoint = new Point(-100000, -100000);
 
         private Rectangle oldRect;
 
@@ -33,6 +41,7 @@ namespace Sketcher
             toolImageNames = new String[] { "btn_pencil", "btn_rectangle", "btn_ellipse" };
             toolNames = new String[] { "Pencil Tool", "Rectangle Tool", "Ellipse Tool" };
             oldRect = new Rectangle(0, 0, 0, 0);
+            startPoint = nullPoint;
 
             isDrawing = false;
             shouldFormailzed = false;
@@ -53,6 +62,7 @@ namespace Sketcher
             toolIcons = new PictureBox[] { pencilTool, rectangleTool, ellipseTool};
             this.pencilTool_Click_1(null, null);
             setToolTips();
+            newCanvas();
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -92,7 +102,6 @@ namespace Sketcher
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             
             Pen drawPen = new Pen(Color.Black, 1);
-            g = canvas.CreateGraphics();
             startPoint = new Point(e.X, e.Y);
             isDrawing = true;
         }
@@ -100,10 +109,12 @@ namespace Sketcher
         private void canvas_MouseMove(object sender, MouseEventArgs e) {
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             
-            if (g != null)
+            if (startPoint != nullPoint)
             {
                 if (e.Button == MouseButtons.Left)
                 {
+                    if (g == null) g = Graphics.FromImage(canvas.Image);
+
                     Pen drawPen = new Pen(Color.Black, 1);
                     Point tempPoint = new Point(e.Location.X, e.Location.Y);
                     switch (currentTool)
@@ -131,6 +142,7 @@ namespace Sketcher
                             oldRect = rect;
                             break;
                     }
+                    canvas.Invalidate();
                 }
             }
         }
@@ -141,17 +153,19 @@ namespace Sketcher
             isDrawing = false;
             if (g != null) g.Dispose();
             g = null;
+            startPoint = nullPoint;
 
             switch (currentTool)
             {
                 case Tool.PENCIL:
+                    statusStrip.Items[0].Text = "Something was drawn.";
                     break;
                 case Tool.RECTANGLE:
                     oldRect = new Rectangle(0, 0, 0, 0);
-                    statusStrip.Items[0].Text = "A rectangle is drawn.";
+                    statusStrip.Items[0].Text = "A rectangle was drawn.";
                     break;
                 case Tool.ELLIPSE:
-                    statusStrip.Items[0].Text = "An ellipse is drawn.";
+                    statusStrip.Items[0].Text = "An ellipse was drawn.";
                     oldRect = new Rectangle(0, 0, 0, 0);
                     break;
             }
@@ -213,11 +227,10 @@ namespace Sketcher
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Stream myStream = null;
             OpenFileDialog ofd = new OpenFileDialog();
 
-            ofd.InitialDirectory = "c:\\";
-            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
+            ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
             ofd.FilterIndex = 6;
             ofd.RestoreDirectory = true;
 
@@ -225,11 +238,66 @@ namespace Sketcher
             {
                 canvas.Image = Image.FromFile(ofd.FileName);
                 canvas.Refresh();
+                canvas.SizeMode = PictureBoxSizeMode.AutoSize;
+                statusStrip.Items[0].Text = "Open file " + ofd.FileName;
+                currentPath = ofd.FileName;
             }
 
         }
 
-        
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // If the file has been modified, popup dialog to ask the user to check that
+            newCanvas();
+            currentPath = "";
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentPath == "")
+            {
+                saveAsToolStripMenuItem_Click(null, null);
+            }
+            else
+            {
+                canvas.Image.Save(currentPath);
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            sfd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg|PNG|*.png|TIFF|*.tiff";
+            sfd.FilterIndex = 4;
+            sfd.RestoreDirectory = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                FileStream fs = (FileStream) sfd.OpenFile();
+
+                System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                switch(sfd.FilterIndex)
+                {
+                    case 1: format = System.Drawing.Imaging.ImageFormat.Bmp; break;
+                    case 2: format = System.Drawing.Imaging.ImageFormat.Gif; break;
+                    case 3: format = System.Drawing.Imaging.ImageFormat.Jpeg; break;
+                    case 4: format = System.Drawing.Imaging.ImageFormat.Png; break;
+                    case 5: format = System.Drawing.Imaging.ImageFormat.Tiff; break;
+                }
+                canvas.Image.Save(fs, format);
+                fs.Close();
+            }
+        }
+
+        private void newCanvas()
+        {
+            Bitmap bmp = new Bitmap(Constants.DEFAULT_CANVAS_WIDTH, Constants.DEFAULT_CANVAS_HEIGHT);
+            Graphics.FromImage(bmp).Clear(Color.White);
+            canvas.Image = bmp;
+        }
 
     }
 }
