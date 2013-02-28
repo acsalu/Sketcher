@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Sketcher
 {
@@ -138,7 +139,7 @@ namespace Sketcher
             //Console.Out.WriteLine("MouseDown off canvas");
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             isDrawing = false;
-            g.Dispose();
+            if (g != null) g.Dispose();
             g = null;
 
             switch (currentTool)
@@ -208,6 +209,24 @@ namespace Sketcher
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.Dispose();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Stream myStream = null;
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
+            ofd.FilterIndex = 6;
+            ofd.RestoreDirectory = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                canvas.Image = Image.FromFile(ofd.FileName);
+                canvas.Refresh();
+            }
+
         }
 
         
