@@ -55,6 +55,7 @@ namespace Sketcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.SetAutoSizeMode(AutoSizeMode);
             toolIcons = new PictureBox[] { pencilTool, rectangleTool, ellipseTool};
             this.pencilTool_Click_1(null, null);
             setToolTips();
@@ -231,26 +232,6 @@ namespace Sketcher
             statusStrip.Items[0].Text = "Change to " + toolNames[(int) currentTool] + ".";
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void eDITToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.Dispose();
@@ -272,6 +253,7 @@ namespace Sketcher
                 canvas.SizeMode = PictureBoxSizeMode.AutoSize;
                 statusStrip.Items[0].Text = "Open file " + ofd.FileName;
                 currentPath = ofd.FileName;
+                this.Text = "Sketcher - " + ofd.FileName;
             }
 
         }
@@ -282,6 +264,7 @@ namespace Sketcher
             // If the file has been modified, popup dialog to ask the user to check that
             newCanvas();
             currentPath = "";
+            this.Text = "Sketcher - Untitled";
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -293,6 +276,7 @@ namespace Sketcher
             else
             {
                 canvas.Image.Save(currentPath);
+                statusStrip.Items[0].Text = "Image has been saved.";
             }
         }
 
@@ -320,6 +304,9 @@ namespace Sketcher
                 }
                 canvas.Image.Save(fs, format);
                 fs.Close();
+                currentPath = sfd.FileName;
+                this.Text = "Sketcher - " + sfd.FileName;
+                statusStrip.Items[0].Text = "Image has been saved.";
             }
         }
 
