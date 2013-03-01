@@ -80,19 +80,25 @@ namespace Sketcher
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             Console.Out.WriteLine(e.KeyCode);
-            if (e.KeyCode == Keys.Shift)
+            if (e.KeyCode == Keys.ShiftKey)
             {
-                statusStrip.Items[0].Text = "Formalize the shape.";
-                shouldFormailzed = true;
+                if (Constants.TOOLS_CAN_BE_FORMALIZED.Contains(currentTool))
+                {
+                    statusStrip.Items[0].Text = "Formalize the shape.";
+                    shouldFormailzed = true;
+                }
             }
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Shift)
+            if (e.KeyCode == Keys.ShiftKey)
             {
-                statusStrip.Items[0].Text = "";
-                shouldFormailzed = false;
+                if (Constants.TOOLS_CAN_BE_FORMALIZED.Contains(currentTool))
+                {
+                    statusStrip.Items[0].Text = "";
+                    shouldFormailzed = false;
+                }
             }
         }
 
@@ -339,6 +345,7 @@ namespace Sketcher
         {
             public const int DEFAULT_CANVAS_WIDTH = 800;
             public const int DEFAULT_CANVAS_HEIGHT = 600;
+            public static readonly Tool[] TOOLS_CAN_BE_FORMALIZED = { Tool.RECTANGLE, Tool.ELLIPSE };
         }
 
         private void canvas_MouseEnter(object sender, EventArgs e)
