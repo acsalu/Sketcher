@@ -30,6 +30,8 @@ namespace Sketcher
         private Cursor canvasCursor;
         private Point anchorPointForFormalizedShape;
 
+        private Pen drawPen = new Pen(Color.Black, 3);
+
         public Form1()
         {
             InitializeComponent();
@@ -124,8 +126,8 @@ namespace Sketcher
                 {
                     using (Graphics g = Graphics.FromImage(tempCanvas.Image))
                     {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                        Pen drawPen = new Pen(Color.Black, 1);
                         Point tempPoint = new Point(e.Location.X, e.Location.Y);
                         switch (currentTool)
                         {
@@ -180,6 +182,7 @@ namespace Sketcher
             {
                 using (Graphics g = Graphics.FromImage(canvas.Image))
                 {
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                     g.DrawImage(tempCanvas.Image, new Point(0, 0));
                 }
                 newTempCanvas();
@@ -360,6 +363,25 @@ namespace Sketcher
             Console.Out.WriteLine("Mouse left canvas");
             canvasCursor = this.Cursor;
             this.Cursor = Cursors.Default;
+        }
+
+        private void aboutSketcherToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Just a practice by Acsa Lu (acsa0210@gmail.com)");
+        }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox1.BackColor = colorDialog1.Color;
+                drawPen.Color = colorDialog1.Color;
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
