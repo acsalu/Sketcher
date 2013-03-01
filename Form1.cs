@@ -17,7 +17,6 @@ namespace Sketcher
 
     public partial class Form1 : Form
     {
-        private Graphics g;
         private Point startPoint;
         private Tool currentTool;
         private String[] toolImageNames;
@@ -30,15 +29,12 @@ namespace Sketcher
         private static Point nullPoint = new Point(-100000, -100000);
         private Cursor canvasCursor;
 
-        private Rectangle oldRect;
-
         public Form1()
         {
             InitializeComponent();
             currentTool = Tool.PENCIL;
             toolImageNames = new String[] { "btn_pencil", "btn_rectangle", "btn_ellipse" };
             toolNames = new String[] { "Pencil Tool", "Rectangle Tool", "Ellipse Tool" };
-            oldRect = new Rectangle(0, 0, 0, 0);
             startPoint = nullPoint;
 
             isDrawing = false;
@@ -62,6 +58,10 @@ namespace Sketcher
             this.pencilTool_Click_1(null, null);
             setToolTips();
             newCanvas();
+
+            tempCanvas.Parent = canvas;
+            tempCanvas.Location = new Point(0, 0);
+            newTempCanvas();
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -70,6 +70,7 @@ namespace Sketcher
             {
                 if (e.KeyChar == (char) 27) 
                 {
+                    newTempCanvas();
                     statusStrip.Items[0].Text = "Cancel current drawing.";
                     isDrawing = false;
                 }
@@ -99,10 +100,11 @@ namespace Sketcher
         {
             //Console.Out.WriteLine("MouseDown on canvas");
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
-            
-            Pen drawPen = new Pen(Color.Black, 1);
             startPoint = new Point(e.X, e.Y);
             isDrawing = true;
+
+            newTempCanvas();
+
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e) {
@@ -112,42 +114,40 @@ namespace Sketcher
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (g == null) g = Graphics.FromImage(canvas.Image);
-
-                    Pen drawPen = new Pen(Color.Black, 1);
-                    Point tempPoint = new Point(e.Location.X, e.Location.Y);
-                    switch (currentTool)
+                    using (Graphics g = Graphics.FromImage(tempCanvas.Image))
                     {
-                        case Tool.PENCIL:
-                            g.DrawLine(drawPen, startPoint, tempPoint);
-                            startPoint = tempPoint;
-                            break;
-                        case Tool.RECTANGLE:
-                        case Tool.ELLIPSE:
-                            if (oldRect.Width != 0 || oldRect.Height != 0)
-                            {
-                                if (currentTool == Tool.RECTANGLE) g.DrawRectangle(new Pen(canvas.BackColor), oldRect);
-                                else g.DrawEllipse(new Pen(canvas.BackColor), oldRect.X, oldRect.Y, oldRect.Width, oldRect.Height);
-                            }
 
-                            Rectangle rect = Rectangle.Empty;
-                            
-                            int rectWidth = Math.Abs(startPoint.X - tempPoint.X);
-                            int rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
-                            int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
-                            int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
+                        Pen drawPen = new Pen(Color.Black, 1);
+                        Point tempPoint = new Point(e.Location.X, e.Location.Y);
+                        switch (currentTool)
+                        {
+                            case Tool.PENCIL:
+                                g.DrawLine(drawPen, startPoint, tempPoint);
+                                startPoint = tempPoint;
+                                break;
 
-                            rect = (shouldFormailzed) ? 
-                                new Rectangle(Math.Min(rectWidth, rectHeight), Math.Min(rectWidth, rectHeight), startPoint.X, startPoint.Y) :
-                                new Rectangle(rectX, rectY, rectWidth, rectHeight);
+                            case Tool.RECTANGLE:
+                            case Tool.ELLIPSE:
+                                g.Clear(Color.Transparent);
 
-                            if (currentTool == Tool.RECTANGLE) g.DrawRectangle(drawPen, rect);
-                            else g.DrawEllipse(drawPen, rect.X, rect.Y, rect.Width, rect.Height);
+                                Rectangle rect = Rectangle.Empty;
 
-                            oldRect = rect;
-                            break;
+                                int rectWidth = Math.Abs(startPoint.X - tempPoint.X);
+                                int rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
+                                int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
+                                int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
+
+                                rect = (shouldFormailzed) ?
+                                    new Rectangle(Math.Min(rectWidth, rectHeight), Math.Min(rectWidth, rectHeight), startPoint.X, startPoint.Y) :
+                                    new Rectangle(rectX, rectY, rectWidth, rectHeight);
+
+                                if (currentTool == Tool.RECTANGLE) g.DrawRectangle(drawPen, rect);
+                                else g.DrawEllipse(drawPen, rect.X, rect.Y, rect.Width, rect.Height);
+
+                                break;
+                        }
+                        tempCanvas.Invalidate();
                     }
-                    canvas.Invalidate();
                 }
             }
         }
@@ -155,24 +155,29 @@ namespace Sketcher
         private void canvas_MouseUP(object sender, MouseEventArgs e) {
             //Console.Out.WriteLine("MouseDown off canvas");
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
-            isDrawing = false;
-            if (g != null) g.Dispose();
-            g = null;
-            startPoint = nullPoint;
-
-            switch (currentTool)
+            if (isDrawing)
             {
-                case Tool.PENCIL:
-                    statusStrip.Items[0].Text = "Something was drawn.";
-                    break;
-                case Tool.RECTANGLE:
-                    oldRect = new Rectangle(0, 0, 0, 0);
-                    statusStrip.Items[0].Text = "A rectangle was drawn.";
-                    break;
-                case Tool.ELLIPSE:
-                    statusStrip.Items[0].Text = "An ellipse was drawn.";
-                    oldRect = new Rectangle(0, 0, 0, 0);
-                    break;
+                using (Graphics g = Graphics.FromImage(canvas.Image))
+                {
+                    g.DrawImage(tempCanvas.Image, new Point(0, 0));
+                }
+                newTempCanvas();
+
+                isDrawing = false;
+                startPoint = nullPoint;
+
+                switch (currentTool)
+                {
+                    case Tool.PENCIL:
+                        statusStrip.Items[0].Text = "Something was drawn.";
+                        break;
+                    case Tool.RECTANGLE:
+                        statusStrip.Items[0].Text = "A rectangle was drawn.";
+                        break;
+                    case Tool.ELLIPSE:
+                        statusStrip.Items[0].Text = "An ellipse was drawn.";
+                        break;
+                }
             }
         }
 
@@ -303,6 +308,31 @@ namespace Sketcher
             Bitmap bmp = new Bitmap(Constants.DEFAULT_CANVAS_WIDTH, Constants.DEFAULT_CANVAS_HEIGHT);
             Graphics.FromImage(bmp).Clear(Color.White);
             canvas.Image = bmp;
+        }
+
+        private void newTempCanvas()
+        {
+            Bitmap bmp = new Bitmap(Constants.DEFAULT_CANVAS_WIDTH, Constants.DEFAULT_CANVAS_HEIGHT);
+            tempCanvas.Image = bmp;
+        }
+
+        private void saveTempCanvas()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            sfd.Filter = "PNG|*.png";
+            sfd.FilterIndex = 1;
+            sfd.RestoreDirectory = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                FileStream fs = (FileStream)sfd.OpenFile();
+
+                System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                tempCanvas.Image.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                fs.Close();
+            }
         }
 
         static class Constants
