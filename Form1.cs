@@ -28,6 +28,7 @@ namespace Sketcher
         private String currentPath = "";
         private static Point nullPoint = new Point(-100000, -100000);
         private Cursor canvasCursor;
+        private Point anchorPointForFormalizedShape;
 
         public Form1()
         {
@@ -137,15 +138,28 @@ namespace Sketcher
                                 g.Clear(Color.Transparent);
 
                                 Rectangle rect = Rectangle.Empty;
+                                int rectWidth, rectHeight, rectX, rectY;
 
-                                int rectWidth = Math.Abs(startPoint.X - tempPoint.X);
-                                int rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
-                                int rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
-                                int rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
+                                if (shouldFormailzed)
+                                {
+                                    rectWidth = Math.Abs(startPoint.X - tempPoint.X);
+                                    rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
+                                    rectWidth = rectHeight = Math.Min(rectWidth, rectHeight);
+                                    rectX = (startPoint.X < tempPoint.X) ? startPoint.X : startPoint.X - rectWidth;
+                                    rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : startPoint.Y - rectHeight;
+                                }
+                                else
+                                {
+                                    rectWidth = Math.Abs(startPoint.X - tempPoint.X);
+                                    rectHeight = Math.Abs(startPoint.Y - tempPoint.Y);
+                                    rectX = (startPoint.X < tempPoint.X) ? startPoint.X : tempPoint.X;
+                                    rectY = (startPoint.Y < tempPoint.Y) ? startPoint.Y : tempPoint.Y;
+                                }
 
-                                rect = (shouldFormailzed) ?
-                                    new Rectangle(Math.Min(rectWidth, rectHeight), Math.Min(rectWidth, rectHeight), startPoint.X, startPoint.Y) :
-                                    new Rectangle(rectX, rectY, rectWidth, rectHeight);
+                                
+                                if (!shouldFormailzed) anchorPointForFormalizedShape = new Point(rectX, rectY);
+
+                                rect = new Rectangle(rectX, rectY, rectWidth, rectHeight);
 
                                 if (currentTool == Tool.RECTANGLE) g.DrawRectangle(drawPen, rect);
                                 else g.DrawEllipse(drawPen, rect.X, rect.Y, rect.Width, rect.Height);

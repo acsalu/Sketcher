@@ -52,12 +52,14 @@
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBOUTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutSketcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tempCanvas = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.ellipseTool)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rectangleTool)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pencilTool)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tempCanvas)).BeginInit();
             this.SuspendLayout();
             // 
             // ellipseTool
@@ -93,6 +95,7 @@
             // canvas
             // 
             this.canvas.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.canvas.Location = new System.Drawing.Point(8, 89);
             this.canvas.Name = "canvas";
             this.canvas.Size = new System.Drawing.Size(800, 600);
@@ -267,11 +270,26 @@
             this.aboutSketcherToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.aboutSketcherToolStripMenuItem.Text = "About Sketcher";
             // 
+            // tempCanvas
+            // 
+            this.tempCanvas.BackColor = System.Drawing.Color.Transparent;
+            this.tempCanvas.Location = new System.Drawing.Point(8, 89);
+            this.tempCanvas.Name = "tempCanvas";
+            this.tempCanvas.Size = new System.Drawing.Size(800, 600);
+            this.tempCanvas.TabIndex = 7;
+            this.tempCanvas.TabStop = false;
+            this.tempCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseDown);
+            this.tempCanvas.MouseEnter += new System.EventHandler(this.canvas_MouseEnter);
+            this.tempCanvas.MouseLeave += new System.EventHandler(this.canvas_MouseLeave);
+            this.tempCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseMove);
+            this.tempCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseUP);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(816, 718);
+            this.Controls.Add(this.tempCanvas);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.ellipseTool);
@@ -293,6 +311,7 @@
             this.statusStrip.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tempCanvas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,6 +343,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.PictureBox tempCanvas;
 
     }
 }
