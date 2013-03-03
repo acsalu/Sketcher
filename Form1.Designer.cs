@@ -324,8 +324,8 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(32, 38);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.widthButton_Click);
             // 
             // button2
             // 
@@ -333,8 +333,8 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(33, 38);
             this.button2.TabIndex = 1;
-            this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.widthButton_Click);
             // 
             // button3
             // 
@@ -342,8 +342,8 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(33, 38);
             this.button3.TabIndex = 2;
-            this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.widthButton_Click);
             // 
             // button4
             // 
@@ -351,8 +351,8 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(33, 38);
             this.button4.TabIndex = 3;
-            this.button4.Text = "button4";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.widthButton_Click);
             // 
             // button5
             // 
@@ -360,8 +360,8 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(33, 38);
             this.button5.TabIndex = 4;
-            this.button5.Text = "button5";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.widthButton_Click);
             // 
             // Form1
             // 
@@ -380,6 +380,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Sketcher - Untitled";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);

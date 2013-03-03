@@ -29,6 +29,7 @@ namespace Sketcher
         private static Point nullPoint = new Point(-100000, -100000);
         private Cursor canvasCursor;
         private Point anchorPointForFormalizedShape;
+        private Button[] widthButtons;
 
         private Pen drawPen = new Pen(Color.Black, 3);
 
@@ -66,6 +67,8 @@ namespace Sketcher
             tempCanvas.Parent = canvas;
             tempCanvas.Location = new Point(0, 0);
             newTempCanvas();
+            widthButtons = new Button[] { button1, button2, button3, button4, button5 };
+            changeColor(Color.Black);
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -180,6 +183,7 @@ namespace Sketcher
             //Console.Out.WriteLine("(" + e.Location.X + ", " + e.Location.Y + ")");
             if (isDrawing)
             {
+                hasBeenModified = true;
                 using (Graphics g = Graphics.FromImage(canvas.Image))
                 {
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -237,7 +241,7 @@ namespace Sketcher
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.Dispose();
+            checkBeforeQuit(null);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,6 +261,7 @@ namespace Sketcher
                 statusStrip.Items[0].Text = "Open file " + ofd.FileName;
                 currentPath = ofd.FileName;
                 this.Text = "Sketcher - " + ofd.FileName;
+                hasBeenModified = false;
             }
 
         }
@@ -268,6 +273,7 @@ namespace Sketcher
             newCanvas();
             currentPath = "";
             this.Text = "Sketcher - Untitled";
+            hasBeenModified = false;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -280,6 +286,7 @@ namespace Sketcher
             {
                 canvas.Image.Save(currentPath);
                 statusStrip.Items[0].Text = "Image has been saved.";
+                hasBeenModified = false;
             }
         }
 
@@ -310,6 +317,7 @@ namespace Sketcher
                 currentPath = sfd.FileName;
                 this.Text = "Sketcher - " + sfd.FileName;
                 statusStrip.Items[0].Text = "Image has been saved.";
+                hasBeenModified = false;
             }
         }
 
@@ -374,14 +382,61 @@ namespace Sketcher
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
-                pictureBox1.BackColor = colorDialog1.Color;
-                drawPen.Color = colorDialog1.Color;
+                changeColor(colorDialog1.Color);
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void changeColor(Color c)
         {
+            pictureBox1.BackColor = colorDialog1.Color;
+            drawPen.Color = colorDialog1.Color;
+
+            for (int i = 0; i < widthButtons.Length; ++i)
+            {
+                Button b = widthButtons[i];
+                b.BackgroundImage = new Bitmap(b.Width, b.Height);
+                using (Graphics g = Graphics.FromImage(b.BackgroundImage))
+                { 
+                    g.DrawLine(new Pen(c, 2 * i + 1), new Point(b.Width / 2, 5), new Point(b.Width / 2, b.Height - 5));
+                }
+            }
+
+            statusStrip.Items[0].Text = "Change color.";
+        }
+
+        private void widthButton_Click(object sender, EventArgs e)
+        {
+            Button b = (Button) sender;
+            drawPen.Width = 2 * Array.IndexOf(widthButtons, b) + 1;
+            statusStrip.Items[0].Text = "Change the pen width to " + drawPen.Width + ".";
 
         }
+
+        private void checkBeforeQuit(FormClosingEventArgs e)
+        {
+            if (hasBeenModified)
+            {
+                String message = "You have modified this image. Do you want to save it before quit?";
+                switch ((MessageBox.Show(message, "haha", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)))
+                {
+                    case DialogResult.Yes:
+                        saveToolStripMenuItem_Click(null, null);
+                        this.Dispose();
+                        break;
+                    case DialogResult.No:
+                        this.Dispose();
+                        break;
+                    case DialogResult.Cancel:
+                        if (e != null) e.Cancel = true;
+                        break;
+                }
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            checkBeforeQuit(e);
+        }
+
     }
 }
